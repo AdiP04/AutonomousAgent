@@ -1,19 +1,10 @@
-from utils.web3_utils import approve_tokens, transfer_tokens
-from config.settings import WALLET_ADDRESS, PRIVATE_KEY
+from utils.web3_utils import transfer_tokens
 
-class CryptoHandler:
-    def handle_message(self, message, target_address):
-        if "crypto" in message.lower():
-            # Approve the transfer of 1 token to the target address
-            approval_tx = approve_tokens(WALLET_ADDRESS, PRIVATE_KEY, target_address, 1)
-            if approval_tx:
-                print(f"Approved 1 token transfer to {target_address}, approval TX: {approval_tx}")
-                
-                # Now proceed with the transfer
-                success = transfer_tokens(WALLET_ADDRESS, PRIVATE_KEY, target_address, 1)
-                if success:
-                    print(f"Transferred 1 token to {target_address}, transfer TX: {success}")
-                else:
-                    print("Failed to transfer tokens.")
-            else:
-                print("Token approval failed.")
+def crypto_handler(agent, message):
+    target_address = "0x1234567890abcdef1234567890abcdef12345678"
+    amount = 1  # Token amount
+    tx_hash = transfer_tokens(agent.w3, agent.wallet_address, agent.private_key, agent.token_contract_address, target_address, amount)
+    if tx_hash:
+        print(f"Successfully transferred {amount} tokens to {target_address}. Transaction Hash: {tx_hash}")
+    else:
+        print("Token transfer failed.")
